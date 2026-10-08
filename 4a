@@ -1,0 +1,375 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const ResponsiveApp());
+}
+
+class ResponsiveApp extends StatelessWidget {
+  const ResponsiveApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Responsive Cards',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const ResponsiveHome(),
+    );
+  }
+}
+
+class ResponsiveHome extends StatelessWidget {
+  const ResponsiveHome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Responsive Flutter UI'),
+        centerTitle: true,
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+
+          // Breakpoints
+          if (width < 600) {
+            return const MobileLayout();
+          } else if (width < 1024) {
+            return const TabletLayout();
+          } else {
+            return const DesktopLayout();
+          }
+        },
+      ),
+    );
+  }
+}
+
+// ----------------------------------------------------
+// MOBILE LAYOUT
+// ----------------------------------------------------
+
+class MobileLayout extends StatelessWidget {
+  const MobileLayout({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          // Mobile Portrait: Single column
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: const [
+              PageTitle(title: 'Mobile Portrait'),
+              ContentCard(
+                icon: Icons.phone_android,
+                title: 'Mobile',
+                description: 'Designed for small screens.',
+                color: Colors.blue,
+              ),
+              ContentCard(
+                icon: Icons.touch_app,
+                title: 'Touch',
+                description: 'Touch-friendly controls.',
+                color: Colors.green,
+              ),
+              ContentCard(
+                icon: Icons.speed,
+                title: 'Performance',
+                description: 'Fast and lightweight UI.',
+                color: Colors.orange,
+              ),
+              ContentCard(
+                icon: Icons.settings,
+                title: 'Settings',
+                description: 'Easy application settings.',
+                color: Colors.purple,
+              ),
+            ],
+          );
+        }
+
+        // Mobile Landscape: Horizontal cards
+        return ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.all(16),
+          children: const [
+            ContentCard(
+              width: 250,
+              icon: Icons.phone_android,
+              title: 'Mobile',
+              description: 'Responsive mobile design.',
+              color: Colors.blue,
+            ),
+            ContentCard(
+              width: 250,
+              icon: Icons.touch_app,
+              title: 'Touch',
+              description: 'Touch-friendly interface.',
+              color: Colors.green,
+            ),
+            ContentCard(
+              width: 250,
+              icon: Icons.speed,
+              title: 'Performance',
+              description: 'Fast and lightweight.',
+              color: Colors.orange,
+            ),
+            ContentCard(
+              width: 250,
+              icon: Icons.settings,
+              title: 'Settings',
+              description: 'Application settings.',
+              color: Colors.purple,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ----------------------------------------------------
+// TABLET LAYOUT
+// ----------------------------------------------------
+
+class TabletLayout extends StatelessWidget {
+  const TabletLayout({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final int columns =
+            orientation == Orientation.portrait ? 2 : 3;
+
+        return GridView.count(
+          crossAxisCount: columns,
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          children: const [
+            ContentCard(
+              icon: Icons.tablet,
+              title: 'Tablet',
+              description: 'Optimized for tablet screens.',
+              color: Colors.blue,
+            ),
+            ContentCard(
+              icon: Icons.dashboard,
+              title: 'Dashboard',
+              description: 'More content in a larger layout.',
+              color: Colors.green,
+            ),
+            ContentCard(
+              icon: Icons.analytics,
+              title: 'Analytics',
+              description: 'View application statistics.',
+              color: Colors.orange,
+            ),
+            ContentCard(
+              icon: Icons.notifications,
+              title: 'Notifications',
+              description: 'Manage your notifications.',
+              color: Colors.purple,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ----------------------------------------------------
+// DESKTOP LAYOUT
+// ----------------------------------------------------
+
+class DesktopLayout extends StatelessWidget {
+  const DesktopLayout({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Side navigation
+        NavigationRail(
+          selectedIndex: 0,
+          onDestinationSelected: (index) {},
+          labelType: NavigationRailLabelType.all,
+          destinations: const [
+            NavigationRailDestination(
+              icon: Icon(Icons.home),
+              label: Text('Home'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.analytics),
+              label: Text('Analytics'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.settings),
+              label: Text('Settings'),
+            ),
+          ],
+        ),
+
+        // Main content
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              children: [
+                const Text(
+                  'Desktop Layout',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                Expanded(
+                  child: Row(
+                    children: const [
+                      Expanded(
+                        child: ContentCard(
+                          icon: Icons.computer,
+                          title: 'Desktop',
+                          description:
+                              'Large-screen responsive layout.',
+                          color: Colors.blue,
+                        ),
+                      ),
+
+                      SizedBox(width: 20),
+
+                      Expanded(
+                        child: ContentCard(
+                          icon: Icons.analytics,
+                          title: 'Analytics',
+                          description:
+                              'Detailed application information.',
+                          color: Colors.orange,
+                        ),
+                      ),
+
+                      SizedBox(width: 20),
+
+                      Expanded(
+                        child: ContentCard(
+                          icon: Icons.settings,
+                          title: 'Settings',
+                          description:
+                              'Configure application settings.',
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ----------------------------------------------------
+// PAGE TITLE
+// ----------------------------------------------------
+
+class PageTitle extends StatelessWidget {
+  final String title;
+
+  const PageTitle({
+    super.key,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
+// ----------------------------------------------------
+// CONTENT CARD
+// ----------------------------------------------------
+
+class ContentCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final Color color;
+  final double? width;
+
+  const ContentCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.color,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 55,
+                color: color,
+              ),
+
+              const SizedBox(height: 15),
+
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                description,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
